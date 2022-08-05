@@ -1,0 +1,7 @@
+name: HordeCore
+version: ${project.version}
+main: com.itndev.hordecore.HordeCore
+api-version: 1.18
+depend: [ Factions ]
+authors: [ Jea ]
+description: Horde Core Plugin
