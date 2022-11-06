@@ -14,6 +14,7 @@ import com.itndev.hordecore.NameTag.Cache;
 import com.itndev.hordecore.NameTag.PacketSpawnEntity;
 import com.itndev.hordecore.Utils.BasicUtils;
 import com.itndev.hordecore.Utils.CacheUtils;
+import com.itndev.hordecore.Utils.HideNameTag;
 import com.itndev.hordecore.Utils.PacketUtils;
 import com.itndev.hordecore.Wrappers.WrapperPlayServerEntityTeleport;
 import net.kyori.adventure.text.Component;
@@ -44,6 +45,8 @@ public final class HordeCore extends JavaPlugin {
         return instance;
     }
 
+
+    @Deprecated
     private void updateArmorStandLocation() {
         new BukkitRunnable() {
             @Deprecated
@@ -61,7 +64,7 @@ public final class HordeCore extends JavaPlugin {
                             if(tempplayer.getVehicle() != null) {
                                 Cache.UUID_ENTITYID.get(tempplayer.getUniqueId()).teleport(tempplayer.getLocation().add(0, 1, 0));
                             }
-                            if(tempplayer.isFlying()) {
+                            if(true) {
                                 WrapperPlayServerEntityTeleport playertp = new WrapperPlayServerEntityTeleport();
                                 playertp.setOnGround(false);
                                 playertp.setEntityID(tempplayer.getEntityId());
@@ -70,7 +73,6 @@ public final class HordeCore extends JavaPlugin {
                                 playertp.setZ(tempplayer.getLocation().getZ());
                                 playertp.setPitch(tempplayer.getLocation().getPitch());
                                 playertp.setYaw(tempplayer.getLocation().getYaw());
-                                playertp.broadcastPacket();
                                 PacketUtils.broadcastpacketA_TP(playertp, tempplayer);
                             }
 
@@ -154,6 +156,16 @@ public final class HordeCore extends JavaPlugin {
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
+                        /*WrapperPlayServerEntityTeleport playertp = new WrapperPlayServerEntityTeleport();
+                        playertp.setOnGround(Target.isOnGround());
+                        playertp.setEntityID(Target.getEntityId());
+                        playertp.setX(Target.getLocation().getX());
+                        playertp.setY(Target.getLocation().getY());
+                        playertp.setZ(Target.getLocation().getZ());
+                        playertp.setPitch(Target.getLocation().getPitch());
+                        playertp.setYaw(Target.getLocation().getYaw());
+                        playertp.sendPacket(event.getPlayer());*/
+
                         Boolean current = basicUtils.in_distance(event.getPlayer().getLocation(), Target.getLocation(), 45);
                         /*Boolean before = null;
                         if(LastLocation.LastPacketLocation.containsKey(Target) && LastLocation.LastPacketLocation.containsKey(event.getPlayer())) {
@@ -201,6 +213,7 @@ public final class HordeCore extends JavaPlugin {
         });
     }
 
+    @Deprecated
     @Override
     public void onEnable() {
         instance = this;
@@ -210,6 +223,7 @@ public final class HordeCore extends JavaPlugin {
         }
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), (Plugin)HordeCore.getInstance());
         updateArmorStandLocation();
+        HideNameTag.setup();
 
     }
 

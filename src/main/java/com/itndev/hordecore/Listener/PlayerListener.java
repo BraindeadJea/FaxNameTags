@@ -9,6 +9,7 @@ import com.itndev.hordecore.HordeCore;
 import com.itndev.hordecore.NameTag.Cache;
 import com.itndev.hordecore.NameTag.PacketSpawnEntity;
 import com.itndev.hordecore.Utils.CacheUtils;
+import com.itndev.hordecore.Utils.HideNameTag;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -70,7 +71,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         EntityID_To_Player.put(e.getPlayer().getEntityId(), e.getPlayer());
-        e.getPlayer().setCustomNameVisible(false);
+        HideNameTag.hideName(e.getPlayer());
         new Thread(() -> {
 
             /*

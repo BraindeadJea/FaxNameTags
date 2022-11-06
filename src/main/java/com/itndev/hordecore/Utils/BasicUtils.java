@@ -26,7 +26,7 @@ public class BasicUtils {
         }
     }
 
-    public static Integer getNewID() {
+    public synchronized static Integer getNewID() {
         while (true) {
             Integer newid = (((int) (Math.random() * 99999) + 1)*1000) + count;
             count++;
