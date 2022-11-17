@@ -71,7 +71,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         EntityID_To_Player.put(e.getPlayer().getEntityId(), e.getPlayer());
-        HideNameTag.hideName(e.getPlayer());
         new Thread(() -> {
 
             /*

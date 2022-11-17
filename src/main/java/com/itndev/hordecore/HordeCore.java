@@ -224,6 +224,7 @@ public final class HordeCore extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), (Plugin)HordeCore.getInstance());
         updateArmorStandLocation();
         HideNameTag.setup();
+        HideNameTag.startThread();
 
     }
 
