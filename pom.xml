@@ -84,9 +84,9 @@
         <dependency>
             <groupId>com.itndev.factions</groupId>
             <artifactId>Factions</artifactId>
-            <version>FRONTEND-BETA-1.1.4</version>
+            <version>FRONTEND-BETA-1.6.9</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/Factions-FRONTEND-BETA-1.1.4.jar</systemPath>
+            <systemPath>${basedir}/lib/Factions-FRONTEND-BETA-1.6.9.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

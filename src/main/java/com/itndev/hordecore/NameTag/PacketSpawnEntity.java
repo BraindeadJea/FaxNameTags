@@ -14,6 +14,7 @@ import com.itndev.hordecore.Utils.CacheUtils;
 import com.itndev.hordecore.Utils.PacketUtils;
 import com.itndev.hordecore.Wrappers.WrapperPlayServerEntityDestroy;
 import com.itndev.hordecore.Wrappers.WrapperPlayServerEntityTeleport;
+import com.itndev.hordecore.Wrappers.WrapperPlayServerRelEntityMove;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -202,7 +203,36 @@ public class PacketSpawnEntity {
         packet.getBytes().write(0, (byte)0);
         HordeCore.protocolManager.broadcastServerPacket(t);*/
     }
+    public void move(Player Target, double Dx, double Dy, double Dz) {
+        WrapperPlayServerRelEntityMove movepacket = new WrapperPlayServerRelEntityMove();
+        movepacket.setEntityID(this_id);
+        movepacket.setOnGround(false);
+        movepacket.setDx(Dx);
+        movepacket.setDy(Dy);
+        movepacket.setDz(Dz);
+        movepacket.sendPacket(Target);
 
+
+        /*WrapperPlayServerEntityTeleport teleportpacket = new WrapperPlayServerEntityTeleport();
+        teleportpacket.setEntityID(this_id);
+        teleportpacket.setOnGround(false);
+        teleportpacket.setX(loc.getX());
+        teleportpacket.setY(loc.getY() + diff);
+        teleportpacket.setZ(loc.getZ());
+        teleportpacket.setYaw(0);
+        teleportpacket.setPitch(0);
+        teleportpacket.sendPacket(Target);*/
+        //System.out.println("DEBUG=" + this_id + "/" + loc.getX() + "/" + loc.getY() + "/" + loc.getZ());
+
+        /*PacketContainer packet = HordeCore.protocolManager.createPacket(PacketType.Play.Server.ENTITY_TELEPORT);
+        packet.getIntegers().write(0, this_id);
+        packet.getDoubles().write(0, loc.getX());
+        packet.getDoubles().write(1, loc.getY());
+        packet.getDoubles().write(2, loc.getZ());
+        packet.getBooleans().write(0, false);
+        packet.getBytes().write(0, (byte)0);
+        HordeCore.protocolManager.broadcastServerPacket(t);*/
+    }
     public void teleport_d(Location loc, Player Target, double diff) {
         WrapperPlayServerEntityTeleport teleportpacket = new WrapperPlayServerEntityTeleport();
         teleportpacket.setEntityID(this_id);

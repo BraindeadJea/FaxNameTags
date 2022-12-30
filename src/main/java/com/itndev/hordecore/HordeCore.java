@@ -138,19 +138,25 @@ public final class HordeCore extends JavaPlugin {
         protocolManager.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketTyps_d) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                if(event.getPacketType().equals(PacketType.Play.Server.ENTITY_TELEPORT)
-                        || event.getPacketType().equals(PacketType.Play.Server.REL_ENTITY_MOVE)
-                        || event.getPacketType().equals(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK)) {
+                PacketType packetType = event.getPacketType();
+                if(packetType.equals(PacketType.Play.Server.ENTITY_TELEPORT)
+                        || packetType.equals(PacketType.Play.Server.REL_ENTITY_MOVE)
+                        || packetType.equals(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK)) {
 
-                    if(PlayerListener.EntityID_To_Player.containsKey(event.getPacket().getIntegers().read(0))) {
-                        Player Target = PlayerListener.EntityID_To_Player.get(event.getPacket().getIntegers().read(0));
+                    PacketContainer packet = event.getPacket();
+                    if(PlayerListener.EntityID_To_Player.containsKey(packet.getIntegers().read(0))) {
+                        Player Target = PlayerListener.EntityID_To_Player.get(packet.getIntegers().read(0));
                         double diff = 1.8;
-                        if(Target.isSneaking()) {
+                        if (Target.isSneaking()) {
                             diff = 1.4;
-                        } else if(Target.isSwimming()) {
+                        } else if (Target.isSwimming()) {
                             diff = 1;
                         }
-                        Cache.UUID_ENTITYID.get(Target.getUniqueId()).teleport_d(Target.getLocation(), event.getPlayer(), diff);
+                        if (packetType.equals(PacketType.Play.Server.ENTITY_TELEPORT)) {
+                            Cache.UUID_ENTITYID.get(Target.getUniqueId()).teleport_d(Target.getLocation(), event.getPlayer(), diff);
+                        } else {
+                            Cache.UUID_ENTITYID.get(Target.getUniqueId()).move(Target, packet.getShorts().read(0), packet.getShorts().read(1), packet.getShorts().read(2));
+                        }
                         try {
                             Cache.UUID_ENTITYID.get(Target.getUniqueId()).updateName(event.getPlayer(), factionsAPI.getFactionTag_DisplayTarget(Target, event.getPlayer()));
                         } catch (InvocationTargetException e) {
