@@ -56,17 +56,18 @@ public final class HordeCore extends JavaPlugin {
                     new Thread(() -> {
                         Player tempplayer = Bukkit.getPlayer(uuid);
                         if(tempplayer != null) {
-
+                            //Boolean alreadyteleported = false;
                             if(tempplayer.isRiptiding()) {
-                                Cache.UUID_ENTITYID.get(tempplayer.getUniqueId()).teleport(tempplayer.getLocation());
-
+                                Cache.UUID_ENTITYID.get(uuid).teleport(tempplayer.getLocation());
+                                //alreadyteleported = true;
                             }
                             if(tempplayer.getVehicle() != null) {
-                                Cache.UUID_ENTITYID.get(tempplayer.getUniqueId()).teleport(tempplayer.getLocation().add(0, 1, 0));
+                                Cache.UUID_ENTITYID.get(uuid).teleport(tempplayer.getLocation().add(0, 1, 0));
+                                //alreadyteleported = true;
                             }
-                            if(true) {
+                            if(tempplayer.isFlying()) {
                                 WrapperPlayServerEntityTeleport playertp = new WrapperPlayServerEntityTeleport();
-                                playertp.setOnGround(false);
+                                playertp.setOnGround(tempplayer.isOnGround());
                                 playertp.setEntityID(tempplayer.getEntityId());
                                 playertp.setX(tempplayer.getLocation().getX());
                                 playertp.setY(tempplayer.getLocation().getY());
@@ -80,6 +81,9 @@ public final class HordeCore extends JavaPlugin {
                                 Player tempplayer2 = Bukkit.getPlayer(uuid2);
                                 if (tempplayer2 != null) {
 
+                                    /*if(CacheUtils.is_watching(uuid2, uuid) && !alreadyteleported) {
+                                        Cache.UUID_ENTITYID.get(uuid).teleport_d(tempplayer.getLocation(), tempplayer2, diff);
+                                    }*/
                                     if(LastLocation.LastLocation.containsKey(tempplayer) && LastLocation.LastLocation.containsKey(tempplayer2)) {
                                         Boolean before = basicUtils.in_distance(LastLocation.LastLocation.get(tempplayer), LastLocation.LastLocation.get(tempplayer2), 45);
                                         Boolean current = basicUtils.in_distance(tempplayer.getLocation(), tempplayer2.getLocation(), 45);
@@ -152,11 +156,12 @@ public final class HordeCore extends JavaPlugin {
                         } else if (Target.isSwimming()) {
                             diff = 1;
                         }
-                        if (packetType.equals(PacketType.Play.Server.ENTITY_TELEPORT)) {
+                        Cache.UUID_ENTITYID.get(Target.getUniqueId()).teleport_d(Target.getLocation(), event.getPlayer(), diff);
+                        /*if (packetType.equals(PacketType.Play.Server.ENTITY_TELEPORT)) {
                             Cache.UUID_ENTITYID.get(Target.getUniqueId()).teleport_d(Target.getLocation(), event.getPlayer(), diff);
                         } else {
-                            Cache.UUID_ENTITYID.get(Target.getUniqueId()).move(Target, packet.getShorts().read(0), packet.getShorts().read(1), packet.getShorts().read(2));
-                        }
+                            Cache.UUID_ENTITYID.get(Target.getUniqueId()).move(Target, fromShort(packet.getShorts().read(0)), fromShort(packet.getShorts().read(1)), fromShort(packet.getShorts().read(2)));
+                        }*/
                         try {
                             Cache.UUID_ENTITYID.get(Target.getUniqueId()).updateName(event.getPlayer(), factionsAPI.getFactionTag_DisplayTarget(Target, event.getPlayer()));
                         } catch (InvocationTargetException e) {
@@ -190,12 +195,12 @@ public final class HordeCore extends JavaPlugin {
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-                                /*if(LastLocation.LastPacketLocation.containsKey(Target) && LastLocation.LastPacketLocation.containsKey(event.getPlayer()) && !basicUtils.in_distance(LastLocation.LastPacketLocation.get(event.getPlayer()), LastLocation.LastPacketLocation.get(Target), 40)) {
+                        }/* else {
+                                if(LastLocation.LastPacketLocation.containsKey(Target) && LastLocation.LastPacketLocation.containsKey(event.getPlayer()) && !basicUtils.in_distance(LastLocation.LastPacketLocation.get(event.getPlayer()), LastLocation.LastPacketLocation.get(Target), 40)) {
                                     Cache.UUID_ENTITYID.get(Target.getUniqueId()).spawnfornewplayer(event.getPlayer());
-                                }*/
+                                }
                                 //Cache.UUID_ENTITYID.get(Target.getUniqueId()).updateName(event.getPlayer(), factionsAPI.getFactionTag_DisplayTarget(Targe
-                        }
+                        }*/
                         LastLocation.LastPacketLocation.put(event.getPlayer(), event.getPlayer().getLocation());
                     }
 
@@ -217,6 +222,10 @@ public final class HordeCore extends JavaPlugin {
                 }
             }
         });
+    }
+
+    public double fromShort(short value) {
+        return value / 4096D;
     }
 
     @Deprecated
